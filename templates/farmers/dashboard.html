@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Farmer Dashboard{% endblock title %}
+
+{% block nav %}
+ 
+  <a href="/">Seasonal Crops</a>
+   <a href="/">Plant disease detection</a>
+    <a href="/">Classes</a>
+    <a href="/">Schemes</a>
+    <a href="/">Logout</a>
+{% endblock nav %}
+
+{% block content %}<h1> Farmer dashboard</h1>
+    <p> Welcome, {{request.user.username}} </p>
+    {% endblock content %}
+
+

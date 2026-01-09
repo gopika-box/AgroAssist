@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Officer Dashboard{% endblock title %}
+
+{% block nav %}
+ 
+  <a href="/">Seasonal Crops</a>
+   <a href="/">Plant disease detection</a>
+    <a href="/">Classes</a>
+    <a href="/">Schemes</a>
+    <a href="/">Logout</a>
+{% endblock nav %}
+
+{% block content %}
+    <p> Welcome, {{request.user.username}} </p>
+    <h2>Approval Pending</h2>
+<p>Your account is awaiting admin approval.</p>
+<p>Please check back later.</p>
+    {% endblock content %}
+
+
+
+

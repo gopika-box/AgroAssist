@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}AgroAssist | Smart Farming Support{% endblock %}
+
+{% block nav %}
+    <a href="/accounts/login/" class="hover:text-green-200 transition">
+        Login
+    </a>
+    <a href="/accounts/register/" class="hover:text-green-200 transition">
+        Register
+    </a>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="bg-green-50 py-20">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-10 items-center">
+    
+    <!-- LEFT HERO TEXT -->
+    <div class="space-y-6">
+      <h1 class="text-5xl font-bold text-green-700 leading-tight">
+        Empowering Farmers With Intelligent Agriculture
+      </h1>
+
+      <p class="text-lg text-gray-700">
+        AgroAssist makes farming smarter with AI-powered disease detection, seasonal guidance, verified officer insights,
+        and a marketplace to connect with buyers — all in one platform.
+      </p>
+
+      <div class="flex space-x-4">
+        <a href="/accounts/register/"
+           class="bg-green-600 text-white hover:bg-green-700 px-7 py-3 rounded-lg font-semibold transition">
+          Get Started
+        </a>
+
+        <a href="/accounts/login/"
+           class="border border-green-600 text-green-700 hover:bg-green-100 px-7 py-3 rounded-lg font-semibold transition">
+          Login
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT IMAGE-->
+    <div class="flex justify-center">
+      <img src="{% static 'images/pic1.jpg' %}"
+           alt="Smart Agriculture"
+           class="rounded-xl shadow-xl max-w-xl w-full">
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section class="py-20">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-center text-gray-800 mb-10">
+      What You Can Do With AgroAssist
+    </h2>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-xl transition">
+        <h3 class="font-semibold text-xl text-green-700 mb-3">Seasonal Crop Guidance</h3>
+        <p class="text-gray-600 text-sm">
+          Get intelligent suggestions on the best planting seasons and nutrient-rich crop decisions.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-xl transition">
+        <h3 class="font-semibold text-xl text-green-700 mb-3">AI Disease Detection</h3>
+        <p class="text-gray-600 text-sm">
+          Upload leaf images and get fast AI-powered plant disease diagnosis and prevention tips.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow hover:shadow-xl transition">
+        <h3 class="font-semibold text-xl text-green-700 mb-3">Marketplace & Support</h3>
+        <p class="text-gray-600 text-sm">
+          Connect with buyers directly and access verified agricultural content from experts.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE PROPOSITION / WHY US -->
+<section class="bg-green-50 py-16">
+  <div class="max-w-6xl mx-auto px-6 lg:px-8 text-center space-y-6">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Why Farmers Love AgroAssist</h2>
+    <p class="text-gray-700 max-w-3xl mx-auto text-base">
+      We bring together the best tools and insights — handcrafted for farmers and officers — to improve yields,
+      reduce crop loss, and boost income.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-8 mt-8">
+      <div class="bg-white p-5 rounded-lg shadow">
+        <h4 class="font-semibold text-green-600">Trusted Insights</h4>
+        <p class="text-gray-600 text-sm">
+          Access verified crop notes and officer uploads for real-world farming strategies.
+        </p>
+      </div>
+
+      <div class="bg-white p-5 rounded-lg shadow">
+        <h4 class="font-semibold text-green-600">Easy to Use</h4>
+        <p class="text-gray-600 text-sm">
+          Simple dashboard, intuitive actions, and instant disease detection — no tech skills needed.
+        </p>
+      </div>
+
+      <div class="bg-white p-5 rounded-lg shadow">
+        <h4 class="font-semibold text-green-600">Grow Your Reach</h4>
+        <p class="text-gray-600 text-sm">
+          Marketplace lets farmers sell produce and scale their business.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

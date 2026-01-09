@@ -1,0 +1,52 @@
+
+{% extends "base.html" %}
+
+{% block title %}Register | AgroAssist{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[70vh]">
+    <div class="bg-white shadow-lg rounded-xl p-8 w-full max-w-md text-center">
+
+        <h3 class="text-2xl font-bold text-green-700 mb-6">
+            Please select your role
+        </h3>
+
+        <div class="space-y-4">
+            <!-- Farmer Button -->
+            <a href="/accounts/farmer_register/"
+               class="block w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition">
+                Farmer
+            </a>
+
+            <!-- Officer Button -->
+            <a href="/accounts/officer_register/"
+               class="block w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition">
+                Officer
+            </a>
+        </div>
+
+        <p class="text-sm text-gray-500 mt-6">
+            Officers require admin approval before accessing the dashboard.
+        </p>
+
+    </div>
+</div>
+{% endblock %}
+
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>register</title>
+</head>
+<body>
+    <h3>Please select your role </h3>
+<div >
+    <a href="/accounts/farmer_register/">
+        <button>Farmer </button></a>
+    <a href="/accounts/officer_register"> <button> Officer </button>
+    </a>
+</div>
+</body>
+</html> {% endcomment %}

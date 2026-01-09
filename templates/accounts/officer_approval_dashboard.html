@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock title %}
+
+{% block content %}
+
+<div style="max-width: 900px; margin: 40px auto; padding: 20px;">
+
+  <h2 style="
+      font-size: 26px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #1f2937;
+  ">
+    Officer Approval Dashboard
+  </h2>
+
+  <div style="
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      overflow-x: auto;
+  ">
+    <table style="
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 15px;
+    ">
+      <thead style="background: #f3f4f6;">
+        <tr>
+          <th style="padding: 12px; text-align: left;">Username</th>
+          <th style="padding: 12px; text-align: left;">Role</th>
+          <th style="padding: 12px; text-align: center;">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for officer in officers %}
+        <tr style="border-top: 1px solid #e5e7eb;">
+          <td style="padding: 12px;">{{ officer.username }}</td>
+          <td style="padding: 12px; text-transform: capitalize;">
+            {{ officer.role }}
+          </td>
+          <td style="padding: 12px; text-align: center;">
+            <a href="{% url 'approve_officer' officer.id %}"
+               style="
+                 padding: 8px 16px;
+                 background-color: #16a34a;
+                 color: white;
+                 border-radius: 6px;
+                 text-decoration: none;
+                 font-weight: 500;
+               ">
+              Approve
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3" style="
+              padding: 20px;
+              text-align: center;
+              color: #6b7280;
+          ">
+            No pending officers 🎉
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+{% endblock content %}
