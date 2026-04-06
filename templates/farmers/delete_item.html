@@ -1,0 +1,31 @@
+{% extends "farmers/dashboard.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
+
+  <h2 class="text-xl font-bold text-red-600 mb-4">
+    ⚠ Confirm Removal
+  </h2>
+
+  <p class="mb-4">
+    Are you sure you want to remove
+    <strong>{{ item.name }}</strong> from the marketplace?
+  </p>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="flex justify-between">
+      <button type="submit"
+        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+        Yes, Remove
+      </button>
+
+      <a href="{% url 'marketplace:view_items' %}"
+        class="text-gray-600 hover:underline">
+        Cancel
+      </a>
+    </div>
+  </form>
+
+</div>
+{% endblock content %}

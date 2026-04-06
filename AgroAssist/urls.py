@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.conf import settings
+from django.conf.urls.static import static
 from accounts.views import landing_page
 
 urlpatterns = [
@@ -23,5 +25,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('farmers/',include('farmers.urls')),
-    path('officer/',include('officers.urls')),
-]
+    path('officers/',include('officers.urls')),
+    path('marketplace/',include('marketplace.urls')),
+    path('crops/',include('crops.urls')),
+    path('doubts/', include('doubts.urls')),
+    path('plant_disease/',include('plant_disease.urls')),
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

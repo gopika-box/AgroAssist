@@ -1,0 +1,69 @@
+{% extends "customer/dashboard.html" %}
+{% load tz %}
+{% block content %}
+<div class="max-w-3xl mx-auto h-[75vh] flex flex-col bg-white border-2 border-slate-200 rounded-[2rem] overflow-hidden shadow-xl">
+    
+    <div class="bg-slate-900 p-6 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <span class="text-2xl">📦</span>
+            <div>
+                <h2 class="text-white font-black text-lg leading-tight">{{ room.item.name }}</h2>
+                <p class="text-emerald-400 text-[10px] font-bold uppercase tracking-widest">Secure Channel</p>
+            </div>
+        </div>
+        <div class="text-right text-white">
+            <p class="text-[10px] font-bold text-slate-400 uppercase">Participant</p>
+            <p class="text-sm font-bold">{{ room.farmer.username }}</p> 
+        </div>
+    </div>
+
+    <div class="flex-grow p-6 overflow-y-auto space-y-4 bg-slate-50" id="chat-box">
+        {% for msg in messages %}
+            <div class="flex flex-col {% if msg.sender == request.user %}items-end{% else %}items-start{% endif %}">
+                {% if msg.sender == request.user %}
+                    <div class="bg-slate-900 text-white px-5 py-3 rounded-2xl rounded-br-none max-w-[85%] font-medium shadow-md">
+                        {{ msg.message }}
+                    </div>
+                {% else %}
+                <div class="bg-white border-2 border-slate-200 text-slate-900 px-5 py-3 rounded-2xl rounded-bl-none max-w-[85%] font-medium shadow-sm">
+                        {{ msg.message }}
+                    </div>
+                {% endif %}
+                
+                <span class="text-[9px] font-black text-slate-400 mt-1 uppercase tracking-tighter">
+                    {{ msg.timestamp|localtime|date:"M d, H:i" }} {% if msg.sender == request.user %}✓✓{% endif %}
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="p-6 bg-white border-t-2 border-slate-100">
+        {% if is_blocked %}
+            <div class="bg-red-50 border-2 border-red-100 rounded-xl p-4 flex items-center gap-3">
+                <span class="text-xl">🚫</span>
+                <p class="text-red-700 font-bold text-sm">
+                    This farmer has restricted messaging. You can no longer send messages in this chat.
+                </p>
+            </div>
+        {% else %}
+            <form method="post" class="flex gap-3">
+                {% csrf_token %}
+                <input type="text" name="message" required autocomplete="off"
+                    class="flex-grow bg-slate-100 border-2 border-transparent focus:border-emerald-500 focus:bg-white rounded-xl px-5 py-3 font-bold text-slate-800 transition-all outline-none"
+                    placeholder="Write a message...">
+
+                <button type="submit"
+                    class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-transform active:scale-95 shadow-lg shadow-emerald-100">
+                    Send
+                </button>
+            </form>
+        {% endif %}
+    </div>
+    </div>
+
+<script>
+    // Auto-scroll to most recent message
+    var chat = document.getElementById('chat-box');
+    chat.scrollTop = chat.scrollHeight;
+</script>
+{% endblock %}

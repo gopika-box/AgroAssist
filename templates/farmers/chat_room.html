@@ -1,0 +1,129 @@
+{% extends "farmers/dashboard.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto h-[75vh] flex flex-col bg-white border-2 border-slate-200 rounded-[2rem] overflow-hidden shadow-xl">
+    
+    <div class="bg-slate-900 p-6 flex justify-between items-center">
+        <div class="flex items-center gap-4">
+            <span class="text-2xl">📦</span>
+            <div>
+                <h2 class="text-white font-black text-lg leading-tight">{{ room.item.name }}</h2>
+                <p class="text-emerald-400 text-[10px] font-bold uppercase tracking-widest">Secure Channel</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-6">
+            {% if is_blocked %}
+                <form action="{% url 'farmers:toggle_block_customer' room.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="text-emerald-500 hover:bg-emerald-500/10 transition-colors text-[10px] font-black uppercase tracking-widest border border-emerald-500 px-3 py-1 rounded-full">
+                        Unblock User
+                    </button>
+                </form>
+            {% else %}
+                <button type="button" onclick="openBlockModal()" class="text-slate-400 hover:text-red-500 transition-colors text-[10px] font-black uppercase tracking-widest border border-slate-700 px-3 py-1 rounded-full">
+                    Block User
+                </button>
+            {% endif %}
+
+            <div class="text-right text-white border-l border-slate-700 pl-6">
+                <p class="text-[10px] font-bold text-slate-400 uppercase">Participant</p>
+                <p class="text-sm font-bold">{{ room.customer.username }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-grow p-6 overflow-y-auto space-y-4 bg-slate-50" id="chat-box">
+        {% for msg in messages %}
+            <div class="flex flex-col {% if msg.sender == request.user %}items-end{% else %}items-start{% endif %}">
+                {% if msg.sender == request.user %}
+                    <div class="bg-slate-900 text-white px-5 py-3 rounded-2xl rounded-br-none max-w-[85%] font-medium shadow-md">
+                        {{ msg.message }}
+                    </div>
+                {% else %}
+                    <div class="bg-white border-2 border-slate-200 text-slate-900 px-5 py-3 rounded-2xl rounded-bl-none max-w-[85%] font-medium shadow-sm">
+                        {{ msg.message }}
+                    </div>
+                {% endif %}
+                
+                <span class="text-[9px] font-black text-slate-400 mt-1 uppercase tracking-tighter">
+                    {{ msg.timestamp|time:"H:i" }} {% if msg.sender == request.user %}✓✓{% endif %}
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="p-6 bg-white border-t-2 border-slate-100">
+        {% if is_blocked %}
+            <div class="bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl p-4 flex items-center justify-center gap-3">
+                <span class="text-lg">🔒</span>
+                <p class="text-slate-500 font-bold text-xs uppercase tracking-widest">
+                    Unblock {{ room.customer.username }} to resume this conversation.
+                </p>
+            </div>
+        {% else %}
+            <form method="post" class="flex gap-3">
+                {% csrf_token %}
+                <input type="text" name="message" required autocomplete="off"
+                    class="flex-grow bg-slate-100 border-2 border-transparent focus:border-emerald-500 focus:bg-white rounded-xl px-5 py-3 font-bold text-slate-800 transition-all outline-none"
+                    placeholder="Write a message...">
+
+                <button type="submit"
+                    class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-emerald-700 transition-transform active:scale-95 shadow-lg shadow-emerald-100">
+                    Send
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+<div id="blockModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+    <div class="bg-white rounded-[2rem] w-full max-w-sm overflow-hidden shadow-2xl border-2 border-slate-100 transform transition-all">
+        <div class="p-8 text-center">
+            <div class="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-3xl">🚫</span>
+            </div>
+            <h3 class="text-slate-900 font-black text-xl mb-2">Block Customer?</h3>
+            <p class="text-slate-500 font-bold text-sm leading-relaxed">
+                {{ room.customer.username }} will no longer be able to send you messages. You can unblock them later if needed.
+            </p>
+        </div>
+        
+        <div class="flex border-t-2 border-slate-50">
+            <button type="button" onclick="closeBlockModal()" class="flex-1 p-5 text-slate-400 font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors">
+                Cancel
+            </button>
+            <form action="{% url 'farmers:toggle_block_customer' room.id %}" method="POST" class="flex-1 flex m-0">
+                {% csrf_token %}
+                <button type="submit" class="flex-1 p-5 bg-red-600 text-white font-black text-xs uppercase tracking-widest hover:bg-red-700 transition-colors">
+                    Confirm Block
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    var chat = document.getElementById('chat-box');
+    chat.scrollTop = chat.scrollHeight;
+
+    function openBlockModal() {
+        document.getElementById('blockModal').classList.remove('hidden');
+    }
+
+    function closeBlockModal() {
+        document.getElementById('blockModal').classList.add('hidden');
+    }
+
+    // Close modal if clicking outside
+    window.onclick = function(event) {
+        let modal = document.getElementById('blockModal');
+        if (event.target == modal) {
+            closeBlockModal();
+        }
+    }
+</script>
+{% endblock %}

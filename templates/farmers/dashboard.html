@@ -1,18 +1,228 @@
 {% extends "base.html" %}
 
-{% block title %}Farmer Dashboard{% endblock title %}
+{% block title %}Farmer Dashboard | AgroAssist{% endblock title %}
+
+{% block extra_css %}
+<style>
+    /* High-contrast dashboard elements */
+    .stat-card {
+        background: white;
+        border-radius: 1.5rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+    }
+    .action-btn {
+        background: #0f172a; /* Dark Slate for high contrast */
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.75rem;
+        font-weight: 700;
+        transition: all 0.2s;
+    }
+    .action-btn:hover {
+        background: #1e293b;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+    }
+</style>
+{% endblock extra_css %}
+
+{% block titleside %}
+<button class="md:hidden text-white text-2xl" onclick="toggleSidebar()">
+  ☰
+</button>
+{% endblock titleside %}
 
 {% block nav %}
- 
-  <a href="/">Seasonal Crops</a>
-   <a href="/">Plant disease detection</a>
-    <a href="/">Classes</a>
-    <a href="/">Schemes</a>
-    <a href="/">Logout</a>
+<div class="flex items-center gap-6">
+    {% comment %} <button class="relative">
+      🔔
+      <span class="absolute -top-2 -right-2 bg-red-600 text-xs text-white rounded-full px-1">2</span>
+    </button> {% endcomment %}
+
+    <div class="relative">
+      <button onclick="toggleAccount()" class="w-10 h-10 bg-white rounded-full text-green-700 font-bold flex items-center justify-center border-2 border-green-600">
+        {{ request.user.username|first|upper }}
+      </button>
+      <div id="accountDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border text-gray-700 z-50">
+        <div class="px-4 py-3 border-b">
+          <p class="font-semibold">{{ request.user.username }}</p>
+          <p class="text-sm text-gray-500">{{ request.user.role|title }}</p>
+        </div>
+        <div class="p-2">
+          <a href="{% url 'accounts:logout' %}" class="block text-center bg-red-600 text-white py-2 rounded hover:bg-red-700">Logout</a>
+        </div>
+      </div>
+    </div>
+</div>
 {% endblock nav %}
 
-{% block content %}<h1> Farmer dashboard</h1>
-    <p> Welcome, {{request.user.username}} </p>
-    {% endblock content %}
+{% block sidebar %}
+<aside id="sidebar" class="w-64 bg-green-800 text-white hidden md:block min-h-screen p-6 space-y-4 dark:bg-gray-800">
+    <a href="{% url "farmers:farmer_dashboard" %}" class="block hover:bg-green-700 p-2 rounded">Dashboard</a>
+    <a href="{% url "crops:seasonal_crops" %}" class="block hover:bg-green-700 p-2 rounded">Seasonal Crops</a>
+    <a href="{% url "ml_model:disease_predict" %}" class="block hover:bg-green-700 p-2 rounded">Plant disease detection</a>
+    
+    <button onclick="toggleMarketplace('classesMenu','classesChevron')" class="w-full flex items-center justify-between hover:bg-green-700 p-2 rounded">
+      <span>Courses</span>
+      <span id="classesChevron" class="transition-transform notranslate">▾</span>
+    </button>
+    <div id="classesMenu" class="hidden ml-4 space-y-1">
+      <a href="{% url 'officers:farmer_view_courses' %}" class="block hover:bg-green-700 p-2 rounded text-sm">View Courses</a>
+    </div>
+
+    <div class="space-y-1">
+      <button onclick="toggleMarketplace('schemeMenu','schemeChevron')" class="w-full flex items-center justify-between hover:bg-green-700 p-2 rounded">
+        <span>Schemes</span>
+        <span id="schemeChevron" class="transition-transform notranslate">▾</span>
+      </button>
+      <div id="schemeMenu" class="hidden ml-4 space-y-1">
+        
+        <a href="{% url "officers:view_schemes" %}" class="block hover:bg-green-700 p-2 rounded">View Schemes</a>
+        <a href = {% url "farmers:my_applications" %} class="block hover:bg-green-700 p-2 rounded">My Applications</a>
+        </div>
+    </div>
+    <div class="space-y-1">
+      <button onclick="toggleMarketplace('marketplaceMenu','marketplaceChevron')" class="w-full flex items-center justify-between hover:bg-green-700 p-2 rounded">
+        <span>Marketplace</span>
+        <span id="marketplaceChevron" class="transition-transform notranslate">▾</span>
+      </button>
+      <div id="marketplaceMenu" class="hidden ml-4 space-y-1">
+        <a href="{% url 'marketplace:view_items' %}" class="block hover:bg-green-700 p-2 rounded text-sm">View Marketplace</a>
+        <a href="{% url 'marketplace:add_item' %}" class="block hover:bg-green-700 p-2 rounded text-sm">Add Item</a>
+      </div>
+    </div>
+
+    <div class="space-y-1">
+      <button onclick="toggleMarketplace('doubtMenu','doubtsChevron')" class="w-full flex items-center justify-between hover:bg-green-700 p-2 rounded">
+        <span>Doubts</span>
+        <span id="doubtsChevron" class="transition-transform notranslate">▾</span>
+      </button>
+      <div id="doubtMenu" class="hidden ml-4 space-y-1">
+        <a href="{% url 'farmers:ask_doubt' %}" class="block hover:bg-green-700 p-2 rounded text-sm">Ask Doubts</a>
+        <a href="{% url 'farmers:my_doubts' %}" class="block hover:bg-green-700 p-2 rounded text-sm">View Doubts</a>
+      </div>
+      <a href="{% url 'farmers:farmer_chats' %}" class="block hover:bg-green-700 p-2 rounded">Customer Messages</a>
+    </div>
+</aside>
+{% endblock sidebar %}
 
 
+
+{% block content %}
+<div class="space-y-8">
+
+    <!-- HEADER -->
+    <div class="bg-white rounded-2xl shadow p-6 flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold">Hello, {{ request.user.username }} 👋</h1>
+            <p class="text-sm text-gray-500">
+                Panchayat: {{ request.user.farmer_profile.panchayat }}
+            </p>
+        </div>
+
+        <a href="{% url 'ml_model:disease_predict' %}"
+           class="bg-green-600 text-white px-4 py-2 rounded-lg">
+           Scan Crop 🌿
+        </a>
+    </div>
+
+    <!-- STATS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="bg-white p-6 rounded-xl shadow">
+            <p class="text-gray-500 text-sm">My Applications</p>
+            <h2 class="text-3xl font-bold">{{ my_applications }}</h2>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow">
+            <p class="text-gray-500 text-sm">Pending</p>
+            <h2 class="text-3xl font-bold text-yellow-600">{{ pending }}</h2>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl shadow">
+            <p class="text-gray-500 text-sm">Approved</p>
+            <h2 class="text-3xl font-bold text-green-600">{{ approved }}</h2>
+        </div>
+
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- AI CARD -->
+        <div class="bg-green-700 text-white p-6 rounded-2xl">
+            <h2 class="text-xl font-bold mb-2">Plant Health AI</h2>
+            <p class="text-sm mb-4">
+                Detect diseases using CNN model instantly.
+            </p>
+
+            <a href="{% url 'ml_model:disease_predict' %}"
+               class="bg-white text-green-700 px-4 py-2 rounded-lg font-semibold">
+               Start Scan
+            </a>
+        </div>
+
+        <!-- LATEST SCHEMES -->
+        <div class="bg-white p-6 rounded-2xl shadow">
+            <h2 class="text-lg font-bold mb-4">Latest Schemes</h2>
+
+            {% for scheme in latest_schemes %}
+            <div class="border-l-4 border-green-600 pl-3 mb-3">
+                <p class="font-semibold">{{ scheme.title }}</p>
+                <p class="text-xs text-gray-500">
+                    Deadline: {{ scheme.deadline }}
+                </p>
+
+                <a href="{% url 'officers:apply_scheme' scheme.id %}"
+                   class="text-green-600 text-sm">
+                   Apply →
+                </a>
+            </div>
+            {% empty %}
+            <p>No schemes available</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- MY APPLICATIONS -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+        <h2 class="text-lg font-bold mb-4">My Applications</h2>
+
+        {% for app in my_apps %}
+        <div class="flex justify-between border-b py-2">
+            <span>{{ app.scheme.title }}</span>
+
+            <span class="
+                {% if app.status == 'Approved' %} text-green-600
+                {% elif app.status == 'Rejected' %} text-red-600
+                {% else %} text-yellow-600 {% endif %}
+            ">
+                {{ app.status }}
+            </span>
+        </div>
+        {% empty %}
+        <p>No applications yet</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    function toggleSidebar(){
+        document.getElementById("sidebar").classList.toggle("hidden")
+    }
+
+    function toggleMarketplace(menuId, chevronId) {
+        document.getElementById(menuId).classList.toggle("hidden")
+        document.getElementById(chevronId).classList.toggle("rotate-180")
+    }
+</script>
+{% endblock extra_js %}

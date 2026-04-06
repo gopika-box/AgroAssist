@@ -1,0 +1,104 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}Add Fertilizer Schedule{% endblock %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <h2 class="text-2xl font-bold text-green-700 mb-4">
+    🌱 Add Fertilizer for {{ crop.name }}
+  </h2>
+
+  <form method="POST" class="space-y-4 bg-white p-6 rounded-2xl shadow">
+    {% csrf_token %}
+
+    <!-- Crop (fixed) -->
+    <input type="hidden" name="crop" value="{{ crop.id }}">
+
+    <!-- Container for multiple rows -->
+    <div id="fertilizer-container">
+
+      <!-- ONE ROW -->
+      <div class="fert-row border p-4 rounded mb-4">
+
+        <!-- Fertilizer -->
+        <div class="mb-2">
+          <label class="block text-sm font-medium">Fertilizer</label>
+          <select name="fertilizer[]" required class="w-full border rounded px-3 py-2">
+            {% for f in fertilizers %}
+              <option value="{{ f.id }}">{{ f.name }} ({{ f.brand }})</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Stage -->
+        <div class="mb-2">
+          <label class="block text-sm font-medium">Stage</label>
+          <select name="stage[]" required class="w-full border rounded px-3 py-2">
+            <option value="">Select stage</option>
+            <option value="Basal">Basal (Before sowing)</option>
+            <option value="Seedling">Seedling Stage</option>
+            <option value="Vegetative">Vegetative Stage</option>
+            <option value="Tillering">Tillering Stage</option>
+            <option value="Flowering">Flowering Stage</option>
+            <option value="Fruiting">Fruiting Stage</option>
+            <option value="Harvesting">Harvesting Stage</option>
+          </select>
+        </div>
+
+        <!-- Quantity -->
+        <div class="mb-2">
+          <label class="block text-sm font-medium">Quantity</label>
+          <input name="quantity[]" required placeholder="e.g. 50kg/acre"
+                 class="w-full border rounded px-3 py-2">
+        </div>
+
+        <!-- Notes -->
+        <div>
+          <label class="block text-sm font-medium">Notes</label>
+          <textarea name="notes[]" class="w-full border rounded px-3 py-2"></textarea>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-between">
+
+      <!-- Add Row -->
+      <button type="button" onclick="addRow()"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded">
+        ➕ Add Another
+      </button>
+
+      <!-- Submit -->
+      <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+        Save All
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
+
+<!-- 🔥 JavaScript -->
+<script>
+function addRow() {
+  const container = document.getElementById("fertilizer-container");
+  const firstRow = document.querySelector(".fert-row");
+  const newRow = firstRow.cloneNode(true);
+
+  // Clear input values
+  newRow.querySelectorAll("input, textarea").forEach(el => el.value = "");
+
+  // Reset dropdowns
+  newRow.querySelectorAll("select").forEach(el => el.selectedIndex = 0);
+
+  container.appendChild(newRow);
+}
+</script>
+
+{% endblock %}

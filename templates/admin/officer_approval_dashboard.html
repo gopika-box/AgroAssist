@@ -1,0 +1,88 @@
+{% extends "admin/dashboard.html" %}
+
+{% block content %}
+
+<div style="max-width: 1100px; margin: 40px auto; padding: 20px;">
+
+  <h2 style="font-size: 26px; font-weight: bold; margin-bottom: 20px;">
+    Officer Approval Dashboard
+  </h2>
+
+  <div style="background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); overflow-x:auto;">
+
+    <table style="width:100%; border-collapse: collapse;">
+
+      <thead style="background:#f3f4f6;">
+        <tr>
+          <th style="padding:12px;">Username</th>
+          <th style="padding:12px;">Unique ID</th>
+          <th style="padding:12px;">Phone</th>
+          <th style="padding:12px;">Panchayat</th>
+          <th style="padding:12px;">ID Proof</th>
+          <th style="padding:12px;">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for officer in officers %}
+        <tr style="border-top:1px solid #e5e7eb;">
+
+          <td style="padding:12px;">
+            {{ officer.username }}
+          </td>
+
+          <td style="padding:12px;">
+            {{ officer.officer_profile.unique_id }}
+          </td>
+
+          <td style="padding:12px;">
+            {{ officer.officer_profile.phone }}
+          </td>
+
+          <td style="padding:12px;">
+            {{ officer.officer_profile.panchayat }}
+          </td>
+
+          <td style="padding:12px;">
+            {% if officer.officer_profile.id_proof %}
+              <a href="{{ officer.officer_profile.id_proof.url }}" target="_blank"
+                 style="color:blue; text-decoration:underline;">
+                 View
+              </a>
+            {% else %}
+              Not uploaded
+            {% endif %}
+          </td>
+
+          <td style="padding:12px; text-align:center;">
+
+            <a href="{% url 'accounts:approve_officer' officer.id %}"
+               style="padding:6px 12px; background:#16a34a; color:white; border-radius:6px;">
+              Approve
+            </a>
+
+            <a href="{% url 'accounts:reject_officer' officer.id %}"
+               style="padding:6px 12px; background:#dc2626; color:white; border-radius:6px; margin-left:5px;">
+              Reject
+            </a>
+
+          </td>
+
+        </tr>
+
+        {% empty %}
+        <tr>
+          <td colspan="6" style="padding:20px; text-align:center; color:gray;">
+            No pending officers 🎉
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+{% endblock %}

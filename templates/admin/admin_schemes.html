@@ -1,0 +1,78 @@
+{% extends "admin/dashboard.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+
+  <h2 class="text-3xl font-bold text-green-700 mb-6">
+    🏛 Government Schemes
+  </h2>
+
+  <div class="bg-white rounded-2xl shadow overflow-hidden">
+    <table class="min-w-full text-sm">
+      <thead class="bg-green-600 text-white">
+        <tr>
+          <th class="px-4 py-3 text-left">Title</th>
+          <th class="px-4 py-3 text-left">Deadline</th>
+          <th class="px-4 py-3 text-left">Uploaded By</th>
+          <th class="px-4 py-3 text-left">PDF</th>
+          <th class="px-4 py-3 text-left">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y">
+        {% for scheme in schemes %}
+        <tr class="hover:bg-green-50">
+          <td class="px-4 py-3 font-medium">
+            {{ scheme.title }}
+          </td>
+
+          <td class="px-4 py-3">
+            {% if scheme.deadline %}
+              {{ scheme.deadline }}
+            {% else %}
+              No deadline
+            {% endif %}
+          </td>
+
+          <td class="px-4 py-3">
+            {{ scheme.uploaded_by.username }}
+          </td>
+
+          <td class="px-4 py-3">
+            {% if scheme.scheme_pdf %}
+              <a href="{{ scheme.scheme_pdf.url }}"
+                 target="_blank"
+                 class="text-blue-600 underline">
+                 View PDF
+              </a>
+            {% else %}
+              —
+            {% endif %}
+          </td>
+
+          <td class="px-4 py-3">
+            <form method="POST"
+                  action="{% url 'accounts:admin_delete_scheme' scheme.id %}">
+              {% csrf_token %}
+              <button type="submit"
+                      class="text-red-600 hover:underline"
+                      onclick="return confirm('Delete this scheme?');">
+                Delete
+              </button>
+            </form>
+          </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="px-4 py-6 text-center text-gray-500">
+            No schemes available.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

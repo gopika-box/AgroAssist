@@ -1,0 +1,72 @@
+{% extends "farmers/dashboard.html" %}
+
+{% block title %}Edit Product{% endblock %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow">
+
+  <h2 class="text-2xl font-bold text-green-700 mb-6">
+    ✏️ Edit Product
+  </h2>
+
+  <form method="POST" enctype="multipart/form-data" class="space-y-5">
+    {% csrf_token %}
+
+    <!-- Name -->
+    <input type="text" name="name" value="{{ item.name }}"
+           class="w-full border px-4 py-2 rounded-lg">
+
+    <!-- Category -->
+    <select name="category"
+            class="w-full border px-4 py-2 rounded-lg">
+        <option value="Vegetables" {% if item.category == "Vegetables" %}selected{% endif %}>Vegetables</option>
+        <option value="Fruits" {% if item.category == "Fruits" %}selected{% endif %}>Fruits</option>
+        <option value="Grains" {% if item.category == "Grains" %}selected{% endif %}>Grains</option>
+        <option value="Seeds" {% if item.category == "Seeds" %}selected{% endif %}>Seeds</option>
+        <option value="Crop" {% if item.category == "Crop" %}selected{% endif %}>Crop</option>
+    </select>
+
+    <!-- Price -->
+    <input type="number" name="price" value="{{ item.price }}"
+           class="w-full border px-4 py-2 rounded-lg">
+
+    <!-- Quantity -->
+    <input type="text" name="quantity" value="{{ item.quantity }}"
+           class="w-full border px-4 py-2 rounded-lg">
+
+    <!-- Unit -->
+    <select name="unit" class="w-full border px-4 py-2 rounded-lg">
+        <option value="kg" {% if item.unit == "kg" %}selected{% endif %}>Kg</option>
+        <option value="bunch" {% if item.unit == "bunch" %}selected{% endif %}>Bunch</option>
+        <option value="piece" {% if item.unit == "piece" %}selected{% endif %}>Piece</option>
+    </select>
+
+    <!-- Phone -->
+    <input type="text" name="contact_phone" value="{{ item.contact_phone }}"
+           class="w-full border px-4 py-2 rounded-lg">
+
+    <!-- Image -->
+    <input type="file" name="image" class="w-full border px-4 py-2 rounded-lg">
+
+    <!-- Description -->
+    <textarea name="description" rows="3"
+              class="w-full border px-4 py-2 rounded-lg">{{ item.description }}</textarea>
+
+    <!-- Buttons -->
+    <div class="flex justify-between">
+        <button class="bg-green-700 text-white px-6 py-2 rounded-lg">
+            Update
+        </button>
+
+        <a href="{% url 'marketplace:view_items' %}"
+           class="text-gray-600 hover:underline">
+           Cancel
+        </a>
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

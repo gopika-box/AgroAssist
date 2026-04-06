@@ -1,0 +1,81 @@
+{% extends "officers/dashboard.html" %}
+
+{% block title %}Government Schemes | AgroAssist{% endblock title %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto pb-20">
+    
+    <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-10 border-b-2 border-slate-100 pb-8">
+        <div>
+            <h2 class="text-4xl font-black text-slate-900 tracking-tighter">Government Schemes</h2>
+            <p class="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em] mt-1">Official Directives & Subsidy Programs</p>
+        </div>
+        <a href="{% url 'officers:add_scheme' %}" class="bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-slate-200">
+            + Add New Scheme
+        </a>
+    </div>
+
+    <div class="grid gap-8">
+        {% for scheme in schemes %}
+        <div class="bg-white rounded-[2.5rem] border-2 border-slate-100 p-8 hover:border-emerald-500 transition-all shadow-sm">
+            <div class="flex flex-col lg:flex-row gap-8">
+                
+                <div class="flex-grow space-y-5">
+                    <div class="flex items-center gap-3">
+                        <span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                            ID: SCH-{{ scheme.id|stringformat:"03d" }}
+                        </span>
+                        {% if scheme.deadline %}
+                        <span class="bg-slate-900 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
+                            Live
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <h3 class="text-3xl font-black text-slate-900 tracking-tight leading-none">{{ scheme.title }}</h3>
+                    
+                    <p class="text-slate-600 text-sm font-medium leading-relaxed italic">
+                        "{{ scheme.description }}"
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-5 border-y border-slate-50">
+                        <div>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Eligibility Criteria</p>
+                            <p class="text-sm font-bold text-slate-800">{{ scheme.eligibility }}</p>
+                        </div>
+                        <div>
+                            <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Submission Deadline</p>
+                            <p class="text-sm font-bold {% if scheme.deadline %}text-emerald-600{% else %}text-slate-400 italic{% endif %}">
+                                {{ scheme.deadline|default:"No Fixed Deadline" }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:w-56 flex flex-col gap-3 justify-center border-t lg:border-t-0 lg:border-l border-slate-100 pt-6 lg:pt-0 lg:pl-8">
+                    {% if scheme.scheme_pdf %}
+                    <a href="{{ scheme.scheme_pdf.url }}" target="_blank" class="flex items-center justify-center gap-2 py-4 bg-slate-50 text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-slate-100 transition-all">
+                        📄 Download PDF
+                    </a>
+                    {% else %}
+                    <div class="text-center py-4 text-[9px] font-black text-slate-300 uppercase italic">No Document</div>
+                    {% endif %}
+
+                    {% if scheme.uploaded_by == request.user %}
+                    <a href="{% url 'officers:modify_scheme' scheme.id %}" class="flex items-center justify-center gap-2 py-4 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-100">
+                        ✏️ Modify Data
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="bg-white rounded-[3rem] p-20 text-center border-2 border-dashed border-slate-200">
+            <div class="text-5xl mb-4 opacity-20">📜</div>
+            <h3 class="text-xl font-black text-slate-800 uppercase tracking-widest">Registry Empty</h3>
+            <p class="text-slate-400 font-medium mt-2">There are currently no active schemes in this sector.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

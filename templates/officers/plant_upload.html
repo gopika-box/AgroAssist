@@ -1,0 +1,94 @@
+{% extends "officers/dashboard.html" %}
+
+{% block title %}Plant Disease Detection{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-green-700">🌿 Plant Disease Detection</h2>
+    <p class="text-gray-600 mt-1">Upload a leaf image to detect possible plant disease using AI.</p>
+  </div>
+
+  <!-- Card -->
+  <div class="bg-white rounded-2xl shadow-md p-6">
+
+    <!-- Upload Form -->
+    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+      {% csrf_token %}
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Upload Leaf Image
+        </label>
+        <input 
+          type="file" 
+          name="image" 
+          accept="image/*"
+          required
+          class="block w-full text-sm text-gray-700 
+                 file:mr-4 file:py-2 file:px-4 
+                 file:rounded-lg file:border-0 
+                 file:text-sm file:font-semibold 
+                 file:bg-green-100 file:text-green-700 
+                 hover:file:bg-green-200"
+        >
+      </div>
+
+      <button 
+        type="submit"
+        class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition"
+      >
+        🔍 Detect Disease
+      </button>
+    </form>
+
+    <!-- Result -->
+    {% if prediction %}
+      <div class="mt-8 border-t pt-6">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">Result</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+
+          <!-- Image Preview -->
+          {% if image_url %}
+            <div class="flex justify-center">
+              <img 
+                src="{{ image_url }}" 
+                alt="Uploaded Leaf" 
+                class="w-48 h-48 object-cover rounded-xl shadow"
+              >
+            </div>
+          {% endif %}
+
+          <!-- Prediction Info -->
+          <div class="bg-green-50 rounded-xl p-4">
+            <p class="text-gray-700">
+              <span class="font-semibold">Disease:</span>
+              <span class="text-green-700">{{ prediction }}</span>
+            </p>
+            <p class="text-gray-700 mt-2">
+              <span class="font-semibold">Confidence:</span>
+              <span class="text-green-700">{{ confidence }}%</span>
+            </p>
+
+            <!-- Confidence Bar -->
+            <div class="mt-3">
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div 
+                  class="bg-green-600 h-2.5 rounded-full" 
+                  style="width: {{ confidence }}%;">
+                </div>
+              </div>
+              <p class="text-xs text-gray-500 mt-1">Model confidence level</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock content %}

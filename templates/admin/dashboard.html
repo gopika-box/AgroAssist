@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+
+{% block titleside %}
+<button class="md:hidden text-white text-2xl" onclick="toggleSidebar()">
+  ☰
+</button>
+
+{% endblock titleside %}
+   
+{% block nav %}
+  
+
+        <!-- Notifications -->
+        {% comment %} <button class="relative">
+          🔔
+          <span class="absolute -top-2 -right-2 bg-red-600 text-xs text-white rounded-full px-1">
+            2
+          </span>
+        </button> {% endcomment %}
+
+        <!-- Dark Mode -->
+        {% comment %} <button onclick="toggleTheme()" id= "themeToggle">🌙</button> {% endcomment %}
+
+        <!-- ACCOUNT DROPDOWN -->
+        <div class="relative">
+          <!-- Profile Circle -->
+          <button onclick="toggleAccount()"
+            class="w-10 h-10 bg-white rounded-full text-green-700 font-bold flex items-center justify-center">
+            {{ request.user.username|first|upper }}
+          </button>
+
+          <!-- Dropdown -->
+          <div id="accountDropdown"
+               class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border text-gray-700 z-50">
+
+            <div class="px-4 py-3 border-b">
+              <p class="font-semibold">{{ request.user.username }}</p>
+              <p class="text-sm text-gray-500">{{ request.user.role|title }}</p>
+            </div>
+
+            <div class="p-2">
+              <a href="{% url 'accounts:logout' %}"
+                 class="block text-center bg-red-600 text-white py-2 rounded hover:bg-red-700">
+                Logout
+              </a>
+            </div>
+          </div>
+        </div>
+ {% endblock nav %}
+      
+ {% block sidebar %}
+<aside id="sidebar"
+  class="w-64 bg-green-800 text-white hidden md:block min-h-screen p-6 space-y-4 dark:bg-gray-800">
+    <a href="{% url "accounts:admin_dashboard" %}"
+     class="block hover:bg-green-700 p-2 rounded">Dashboard</a>
+  <a href="{% url "accounts:officer_approval_dashboard" %}"
+     class="block hover:bg-green-700 p-2 rounded">Officer Approval</a>
+<a href="{% url "accounts:admin_officers" %}"
+     class="block hover:bg-green-700 p-2 rounded">Officers</a>
+
+    <a href="{% url "accounts:admin_users" %}"
+     class="block hover:bg-green-700 p-2 rounded">Users</a>
+
+
+
+
+  <a href="{% url 'crops:seasonal_crops' %}"
+     class="block hover:bg-green-700 p-2 rounded">Seasonal Crops</a>
+       <a href="{% url 'accounts:admin_crops' %}"
+     class="block hover:bg-green-700 p-2 rounded">Manage Crops</a>
+
+    <a href="{% url 'accounts:admin_courses' %}"
+     class="block hover:bg-green-700 p-2 rounded">Manage Courses</a>
+     <a href="{% url 'accounts:admin_schemes' %}"
+     class="block hover:bg-green-700 p-2 rounded">Manage Schemes</a>
+{% comment %} 
+  <a href="/"
+     class="block hover:bg-green-700 p-2 rounded">Plant disease detection</a>
+
+  <!-- CLASSES -->
+  <button onclick="toggleMarketplace('classesMenu','classesChevron')"
+    class="w-full flex items-center justify-between hover:bg-green-700 p-2 rounded">
+    <span>Classes</span>
+    <span id="classesChevron" class="transition-transform">▾</span>
+  </button>
+
+  <div id="classesMenu" class="hidden ml-4 space-y-1">
+    <a href="{% url 'officers:farmer_view_courses' %}"
+       class="block hover:bg-green-700 p-2 rounded text-sm">View Courses</a>
+    <a href="{% url 'officers:manage_courses' %}"
+       class="block hover:bg-green-700 p-2 rounded text-sm">Manage Classes</a>
+  </div>
+
+  <!-- SCHEMES -->
+  <button onclick="toggleMarketplace('schemesMenu','schemesChevron')"
+    class="w-full flex items-center justify-between hover:bg-green-700 p-2 rounded">
+    <span>Schemes</span>
+    <span id="schemesChevron" class="transition-transform">▾</span>
+  </button>
+
+  <div id="schemesMenu" class="hidden ml-4 space-y-1">
+    <a href="{% url 'officers:view_schemes' %}"
+       class="block hover:bg-green-700 p-2 rounded text-sm">View Schemes</a>
+    <a href="{% url 'officers:add_scheme' %}"
+       class="block hover:bg-green-700 p-2 rounded text-sm">Add Schemes</a>
+       
+  </div>
+
+  <!-- MARKETPLACE -->
+  <button onclick="toggleMarketplace('marketplaceMenu','marketplaceChevron')"
+    class="w-full flex items-center justify-between hover:bg-green-700 p-2 rounded">
+    <span>Marketplace</span>
+    <span id="marketplaceChevron" class="transition-transform">▾</span>
+  </button>
+
+  <div id="marketplaceMenu" class="hidden ml-4 space-y-1">
+    <a href="{% url 'marketplace:view_items' %}"
+       class="block hover:bg-green-700 p-2 rounded text-sm">View Marketplace</a>
+    
+  </div> {% endcomment %}
+
+</aside>
+{% endblock sidebar %}
+
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-6">Admin Dashboard</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+  <div class="bg-white p-4 rounded shadow">
+    <h3 class="text-gray-600">Total Farmers</h3>
+    <p class="text-2xl font-bold">{{ total_farmers }}</p>
+  </div>
+
+  <div class="bg-white p-4 rounded shadow">
+    <h3 class="text-gray-600">Total Officers</h3>
+    <p class="text-2xl font-bold">{{ total_officers }}</p>
+  </div>
+
+  <div class="bg-white p-4 rounded shadow">
+    <h3 class="text-gray-600">Pending Approvals</h3>
+    <p class="text-2xl font-bold text-red-600">{{ pending_officers }}</p>
+  </div>
+
+  <div class="bg-white p-4 rounded shadow">
+    <h3 class="text-gray-600">Marketplace Listings</h3>
+    <p class="text-2xl font-bold">{{ total_listings }}</p>
+  </div>
+
+  <div class="bg-white p-4 rounded shadow">
+    <h3 class="text-gray-600">Queries Raised</h3>
+    <p class="text-2xl font-bold">{{ total_queries }}</p>
+  </div>
+
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+   
+<script>
+    function toggleSidebar(){
+        document.getElementById("sidebar").classList.toggle("hidden")
+    }
+
+    
+  function toggleMarketplace(menuId, chevronId) {
+    document.getElementById(menuId).classList.toggle("hidden")
+    document.getElementById(chevronId).classList.toggle("rotate-180")
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("imageInput")
+    const output = document.getElementById("fileName")
+
+    if (input) {
+      input.addEventListener("change", function () {
+        output.textContent = this.files.length > 0
+          ? this.files[0].name
+          : ""
+      })
+    }
+  })
+  
+
+
+function toggleLessonInputs() {
+  const type = document.getElementById("lesson_type").value;
+
+  document.getElementById("videoInput").classList.add("hidden");
+  document.getElementById("videoFileInput").classList.add("hidden");
+  document.getElementById("notesInput").classList.add("hidden");
+
+  if (type === "video") {
+    document.getElementById("videoInput").classList.remove("hidden");
+    document.getElementById("videoFileInput").classList.remove("hidden");
+  }
+
+  if (type === "notes") {
+    document.getElementById("notesInput").classList.remove("hidden");
+  }
+}
+
+
+  const pdfInput = document.getElementById("schemePdfInput");
+  const fileNameSpan = document.getElementById("pdfFileName");
+
+  if (pdfInput) {
+    pdfInput.addEventListener("change", function () {
+      fileNameSpan.textContent = this.files.length
+        ? this.files[0].name
+        : "No file selected";
+    });
+  }
+
+
+
+</script>
+ {% endblock extra_js %}

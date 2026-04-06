@@ -1,0 +1,25 @@
+{% extends "officers/dashboard.html" %}
+
+{% block content %}
+<h2 class="text-xl font-bold mb-4">Reply to Farmer Doubt</h2>
+
+<div class="bg-white p-4 rounded shadow mb-6">
+  <p class="font-semibold">👨‍🌾 Farmer:</p>
+  <p class="mb-2">{{ doubt.farmer.username }}</p>
+
+  <p class="font-semibold">❓ Question:</p>
+  <p class="text-gray-700">{{ doubt.question }}</p>
+</div>
+
+<form method="post" class="space-y-4">
+  {% csrf_token %}
+  <textarea name="reply" rows="4" required
+    class="w-full border rounded px-3 py-2"
+    placeholder="Type your reply here..."></textarea>
+
+  <button type="submit"
+    class="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800">
+    Send Reply
+  </button>
+</form>
+{% endblock %}

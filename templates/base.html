@@ -1,46 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+      content="frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    
+    <link rel="preconnect" href="https://translate.googleapis.com">
+    <link rel="dns-prefetch" href="https://translate.googleapis.com">
+    <link rel="preconnect" href="https://translate.google.com">
     <title>{% block title %}AgroAssist{% endblock %}</title>
+    
+    <style>
+        /* 1. INPUT STANDARDS */
+        input:not([type="submit"]), select, textarea {
+            background-color: #ffffff !important;
+            border: 2px solid #94a3b8 !important;
+            color: #1e293b !important;
+            padding: 0.75rem 1rem !important;
+            border-radius: 0.75rem !important;
+            transition: all 0.2s ease-in-out !important;
+            width: 100%;
+        }
 
-    <!-- Global CSS -->
+        /* 2. PREVENT LAYOUT SHIFT (IMPORTANT) */
+        body { top: 0 !important; position: static !important; }
+        .goog-te-banner-frame, .skiptranslate, #google_translate_element { display: none !important; }
+        
+        /* 3. CUSTOM TOGGLE BUTTON STYLING */
+        .lang-toggle-container {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
+        .lang-btn {
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: rgba(255, 255, 255, 0.7);
+        }
 
+        .lang-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #15803d; /* Green-700 */
+            shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        
+        /* Briefly hide the main content during transition to reduce 'flicker' */
+        .page-fade {
+            opacity: 0;
+            transition: opacity 0.5s ease-in;
+        }
+
+        /* Once the page is ready, the animation in your base.html handles the rest */
+        body.translated .page-fade {
+            opacity: 1;
+        }
+        }
+    </style>
     {% block extra_css %}{% endblock %}
-
 </head>
-<body class="min-h-screen flex flex-col bg-gray-50 text-gray-800">
 
-    <!-- HEADER / NAVBAR -->
-    <header class=" bg-green-700 text-white shadow-md">
-        <nav class="flex items-center justify-between w-full max-w-7xl mx-auto px-6 py-4">    
-            <div>
-            <h2 class="text-2xl font-bold tracking-wide">
-                <a href="landing">AgroAssist</a> </h2>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans">
+
+<header class="bg-green-700 text-white shadow-[0_4px_20px_rgba(0,0,0,0.1)] sticky top-0 z-50">
+    <nav class="flex items-center justify-between w-full max-w-7xl mx-auto px-6 py-4">
+        
+        <div class="flex items-center gap-3">
+            {% block titleside %}{% endblock titleside %}
+            <a href="/" class="group flex items-center gap-4">
+                <div class="relative w-12 h-12 flex items-center justify-center">
+                    <div class="absolute inset-0 bg-white/10 rounded-2xl rotate-3 group-hover:rotate-12 transition-all duration-500 border border-white/20"></div>
+                    <div class="relative z-10 w-10 h-10 bg-white rounded-tr-[20px] rounded-bl-[20px] shadow-lg flex items-center justify-center overflow-hidden">
+                        <div class="absolute w-full h-[2px] bg-green-100 rotate-45"></div>
+                        <svg viewBox="0 0 24 24" class="w-7 h-7 text-green-600 drop-shadow-sm" fill="currentColor">
+                            <path d="M17,8C8,10 5.9,16.17 3.82,21.34L5.71,22L6.66,19.7C7.14,19.87 7.64,20 8,20C19,20 22,3 22,3C21,5 14,5.25 9,6.25C4,7.25 2,11.5 2,13.5C2,15.5 3.75,17.25 3.75,17.25C7,11 17,8 17,8Z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <h2 class="text-3xl font-black text-white tracking-tighter leading-none notranslate">
+                        Agro<span class="text-green-300">Assist</span>
+                    </h2>
+                </div>
+            </a>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <div class="lang-toggle-container notranslate">
+                <button onclick="translatePage('en')" id="btn-en" class="lang-btn active">EN</button>
+                <button onclick="translatePage('ml')" id="btn-ml" class="lang-btn">മല</button>
+                <button onclick="translatePage('hi')" id="btn-hi" class="lang-btn">हिं</button>
             </div>
 
-        <ul class="flex items-center gap-8">
-            {% comment %} <li class="hover:text-green-200 transition"> <a href="/" >Home</a></li> {% endcomment %}
-        {% block nav %}
-            {% endblock %}  
-        </ul>
-            
-        </nav>
-    </header>
+            {% block nav %}{% endblock nav %}
+        </div>
+    </nav>
+</header>
 
-    <!-- MAIN CONTENT -->
-    <main class="flex-grow max-w-7xl mx-auto w-full px-6 py-10">
-        {% block content %}
-        {% endblock %}
+<div id="google_translate_element"></div> <div class="flex flex-grow">
+    {% block sidebar %}{% endblock sidebar %}
+
+    <main class="flex-grow w-full px-4 md:px-10 py-10 bg-[#f1f5f9] page-fade">
+        <div class="max-w-6xl mx-auto">
+            {% block content %}{% endblock %}
+        </div>
     </main>
+</div>
 
-    <!-- FOOTER -->
-    <footer class="bg-gray-800 text-gray-300 text-center py-4 text-sm">
-        <p>&copy; 2025 AgroAssist. All rights reserved.</p>
-    </footer>
+<footer class="bg-slate-900 text-slate-400 text-center py-8">
+    <p class="font-bold tracking-widest uppercase text-xs">AgroAssist Digital System</p>
+</footer>
+
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en', 
+    includedLanguages: 'en,ml,hi', 
+    autoDisplay: false
+  }, 'google_translate_element');
+}
+
+// THE TOGGLE FUNCTION
+function translatePage(langCode) {
+    const googleSelect = document.querySelector('.goog-te-combo');
+    if (googleSelect) {
+        googleSelect.value = langCode;
+        googleSelect.dispatchEvent(new Event('change'));
+    }
+    
+    // Update active button UI
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('btn-' + langCode).classList.add('active');
+}
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<script>
+    function toggleAccount() {
+        const dropdown = document.getElementById("accountDropdown");
+        if (dropdown) dropdown.classList.toggle("hidden");
+    }
+
+    function toggleSidebar(){
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) sidebar.classList.toggle("hidden");
+    }
+</script>
+{% block extra_js %}{% endblock extra_js %}
 
 </body>
 </html>

@@ -3,21 +3,56 @@
 {% block title %}Officer Dashboard{% endblock title %}
 
 {% block nav %}
- 
-  <a href="/">Seasonal Crops</a>
-   <a href="/">Plant disease detection</a>
-    <a href="/">Classes</a>
-    <a href="/">Schemes</a>
-    <a href="/">Logout</a>
+  <a href="{% url 'accounts:logout' %}"
+         class="inline-block px-5 py-2 rounded-lg
+                bg-green-800 text-white
+                hover:bg-green-600 transition">
+        Logout
+      </a>
 {% endblock nav %}
 
 {% block content %}
-    <p> Welcome, {{request.user.username}} </p>
-    <h2>Approval Pending</h2>
-<p>Your account is awaiting admin approval.</p>
-<p>Please check back later.</p>
-    {% endblock content %}
 
+<div class="min-h-[70vh] flex items-center justify-center">
 
+  <div class="max-w-lg w-full bg-white shadow-lg rounded-xl p-8 text-center">
+
+    <!-- Icon -->
+    <div class="flex justify-center mb-4">
+      <div class="w-16 h-16 flex items-center justify-center
+                  rounded-full bg-yellow-100 text-yellow-600 text-3xl">
+        ⏳
+      </div>
+    </div>
+
+    <!-- Greeting -->
+    <h2 class="text-xl font-semibold text-gray-800 mb-1">
+      Welcome, {{ request.user.username }}
+    </h2>
+
+    <!-- Status -->
+    <p class="text-lg font-medium text-yellow-600 mb-4">
+      Approval Pending
+    </p>
+
+    <!-- Message -->
+    <p class="text-gray-600 leading-relaxed">
+      Your officer account is currently awaiting
+      
+
+      <span class="font-semibold">admin approval</span>.
+      <br>
+      Please check back later.
+    </p>
+<div class="animate-pulse text-yellow-500 text-sm mt-2">
+  Waiting for approval
+</div>
+    
+
+  </div>
+
+</div>
+
+{% endblock content %}
 
 

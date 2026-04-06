@@ -1,0 +1,77 @@
+{% extends "officers/dashboard.html" %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto">
+
+    <h2 class="text-3xl font-bold text-green-700 mb-6">
+        Scheme Applications
+    </h2>
+
+    <div class="bg-white shadow-lg rounded-2xl overflow-hidden">
+        <table class="min-w-full text-sm">
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="px-4 py-3 text-left">Farmer</th>
+                    <th class="px-4 py-3 text-left">Scheme</th>
+                    <th class="px-4 py-3 text-left">Land Area</th>
+                    <th class="px-4 py-3 text-left">Status</th>
+                    <th class="px-4 py-3 text-left">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody class="divide-y">
+                {% for app in applications %}
+                <tr class="hover:bg-green-50">
+
+                    <td class="px-4 py-3">
+                        {{ app.farmer.username }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        {{ app.scheme.title }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        {{ app.land_area }}
+                    </td>
+
+                    <td class="px-4 py-3">
+                        <span class="px-3 py-1 rounded-full text-xs
+                            {% if app.status == 'Pending' %} bg-yellow-100 text-yellow-800
+                            {% elif app.status == 'Approved' %} bg-green-100 text-green-800
+                            {% else %} bg-red-100 text-red-800 {% endif %}">
+                            {{ app.status }}
+                        </span>
+                    </td>
+
+                    <td class="px-4 py-3 space-x-2">
+
+                        {% if app.status == "Pending" %}
+                        <a href="{% url 'officers:update_application_status' app.id 'Approved' %}"
+                           class="text-green-600 font-medium hover:underline">
+                            Approve
+                        </a>
+
+                        <a href="{% url 'officers:update_application_status' app.id 'Rejected' %}"
+                           class="text-red-600 font-medium hover:underline">
+                            Reject
+                        </a>
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="px-4 py-6 text-center text-gray-500">
+                        No applications assigned.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

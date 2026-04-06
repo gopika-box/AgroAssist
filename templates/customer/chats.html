@@ -1,0 +1,102 @@
+{% extends "customer/dashboard.html" %}
+
+{% block title %}My Chats | AgroAssist{% endblock title %}
+
+{% block extra_css %}
+<style>
+    /* Lean Chat Card Styling */
+    .chat-inquiry-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 1.25rem; /* Matches lean dashboard radius */
+        transition: all 0.3s ease;
+    }
+    .chat-inquiry-card:hover {
+        border-color: #10b981;
+        background: #f8fafc;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+    }
+    .user-avatar-mini {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 0.75rem;
+        background: #0f172a; /* Slate-900 */
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 0.875rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .status-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 9999px;
+        background-color: #10b981;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6 md:space-y-8 p-4 md:p-0">
+    
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-slate-100 pb-6">
+        <div>
+            <h2 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tighter leading-none">My Conversations</h2>
+            <p class="text-slate-500 font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em] mt-3">Discuss products and prices with local farmers</p>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 rounded-full border border-emerald-100">
+            <div class="status-dot animate-pulse"></div>
+            <span class="text-[9px] font-black text-emerald-700 uppercase tracking-widest">System Online</span>
+        </div>
+    </div>
+
+    {% if rooms %}
+    <div class="space-y-3 md:space-y-4">
+        {% for room in rooms %}
+        <a href="{% url 'farmers:chat_room' room.id %}" class="chat-inquiry-card block p-5 md:p-6 group">
+            <div class="flex items-center gap-4 md:gap-6">
+                <div class="user-avatar-mini group-hover:bg-emerald-600 transition-colors shrink-0">
+                    {{ room.customer.username|first|upper }}
+                </div>
+
+                <div class="flex-grow min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-[9px] font-black text-emerald-600 uppercase tracking-widest truncate">Product Discussion</span>
+                    </div>
+                    <h3 class="text-lg md:text-xl font-black text-slate-900 group-hover:text-emerald-700 transition-colors truncate">
+                        {{ room.item.name }}
+                    </h3>
+                    <p class="text-xs md:text-sm font-bold text-slate-500 mt-0.5">
+                        Farmer: <span class="text-slate-800">{{ room.customer.username }}</span>
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-end gap-2 shrink-0">
+                    <div class="bg-slate-900 text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest group-hover:bg-emerald-600 transition-all shadow-lg shadow-slate-200">
+                        Open Chat →
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-3xl p-12 md:p-20 text-center border-2 border-dashed border-slate-100">
+        <div class="text-4xl md:text-5xl mb-4">💬</div>
+        <h3 class="text-lg md:text-xl font-black text-slate-800 uppercase tracking-tighter">No Chats Yet</h3>
+        <p class="text-slate-400 font-medium max-w-xs mx-auto mt-2 text-sm">When you message a farmer about their produce, your conversations will appear here.</p>
+        <a href="{% url 'marketplace:view_items' %}" class="inline-block mt-6 px-6 py-3 bg-slate-900 text-white text-xs font-black uppercase tracking-widest rounded-xl hover:bg-black transition-all">
+            Visit Marketplace
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="text-center pt-6 opacity-40">
+        <p class="text-[8px] font-black text-slate-400 uppercase tracking-[0.4em]">Secure Messaging Protocol Enabled</p>
+    </div>
+</div>
+{% endblock content %}

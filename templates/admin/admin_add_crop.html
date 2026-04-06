@@ -1,0 +1,111 @@
+{% extends "admin/dashboard.html" %}
+
+{% block title %}Add Crop{% endblock %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+
+  <!-- Title -->
+  <div class="mb-6">
+    <h2 class="text-3xl font-bold text-green-700">➕ Add New Crop</h2>
+    <p class="text-gray-500">Enter crop details</p>
+  </div>
+
+  <!-- Form -->
+  <div class="bg-white rounded-2xl shadow-md p-6">
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+      {% csrf_token %}
+
+      <!-- Messages -->
+      {% if messages %}
+        {% for message in messages %}
+          <div class="bg-red-100 text-red-700 p-2 rounded mb-3">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- Crop Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Crop Name</label>
+        <input type="text" name="name" required
+               class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+      </div>
+
+      <!-- Season -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Season</label>
+        <select name="season" required
+                class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+          <option value="">Select season</option>
+          <option value="Summer">Summer</option>
+          <option value="Monsoon">Monsoon</option>
+          <option value="Winter">Winter</option>
+          <option value="Spring">Spring</option>
+        </select>
+      </div>
+
+      <!-- Soil Type (UPDATED DROPDOWN) -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Soil Type</label>
+        <select name="soil_type" required
+                class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+          
+          <option value="">Select soil type</option>
+          <option value="Sandy">Sandy</option>
+          <option value="Clay">Clay</option>
+          <option value="Loamy">Loamy</option>
+          <option value="Sandy Loam">Sandy Loam</option>
+          <option value="Clay Loam">Clay Loam</option>
+          <option value="Silty">Silty</option>
+          <option value="Black Soil">Black Soil</option>
+          <option value="Red Soil">Red Soil</option>
+          <option value="Alluvial Soil">Alluvial Soil</option>
+          <option value="Laterite Soil">Laterite Soil</option>
+
+        </select>
+      </div>
+
+      <!-- Duration -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Duration</label>
+        <input type="text" name="duration" placeholder="e.g. 90-120 days"
+               class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500">
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Description</label>
+        <textarea name="description" rows="3"
+                  class="mt-1 w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500"></textarea>
+      </div>
+
+      <!-- Image -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Crop Image</label>
+        <input type="file" name="image"
+               class="mt-1 w-full border rounded-lg px-3 py-2">
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex justify-end gap-3">
+        <a href="{% url 'accounts:admin_crops' %}"
+           class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-50">
+           Cancel
+        </a>
+
+        <button type="submit"
+                class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg shadow">
+          Save Crop
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

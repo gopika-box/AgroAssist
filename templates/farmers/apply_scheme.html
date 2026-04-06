@@ -1,0 +1,93 @@
+{% extends "farmers/dashboard.html" %}
+
+{% block title %}Apply for Scheme | AgroAssist{% endblock title %}
+
+{% block extra_css %}
+<style>
+    /* Fixing the 'washed out' look with high-contrast borders */
+    .form-input-precision {
+        @apply w-full px-5 py-4 bg-white border-2 border-slate-300 rounded-2xl text-slate-900 font-bold transition-all duration-200;
+    }
+    .form-input-precision:focus {
+        @apply border-emerald-500 ring-4 ring-emerald-500/10 outline-none shadow-xl;
+    }
+    .readonly-field {
+        @apply bg-slate-50 border-slate-200 text-slate-500 cursor-not-allowed;
+    }
+    .label-precision {
+        @apply block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 ml-1;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-10">
+    
+    <a href="javascript:history.back()" class="inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 font-black text-[10px] uppercase tracking-widest mb-8 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+        Cancel and Return
+    </a>
+
+    <div class="bg-white shadow-2xl rounded-[3rem] border border-slate-100 overflow-hidden">
+        <div class="bg-slate-900 p-10 text-white relative overflow-hidden">
+            <div class="relative z-10">
+                <p class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mb-2">Application Portal</p>
+                <h2 class="text-4xl font-black tracking-tighter leading-none">
+                    Apply for: <br><span class="text-emerald-500">{{ scheme.title }}</span>
+                </h2>
+            </div>
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="p-10 space-y-8">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-2">
+                    <label class="label-precision">Registered Phone</label>
+                    <input type="text" value="{{ farmer_profile.phone }}" readonly class="form-input-precision readonly-field">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="label-precision">Jurisdiction / Panchayat</label>
+                    <input type="text" value="{{ farmer_profile.panchayat }}" readonly class="form-input-precision readonly-field">
+                </div>
+            </div>
+
+            <hr class="border-slate-100">
+
+            <div class="space-y-2">
+                <label class="label-precision">Cultivated Land Area (in Acres)</label>
+                <div class="relative">
+                    <input type="text" name="land_area" placeholder="e.g. 2.5" required class="form-input-precision">
+                    <span class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300 font-black">AC</span>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <label class="label-precision">Additional Notes</label>
+                <textarea name="notes" rows="4" placeholder="Mention specific requirements or context..." class="form-input-precision resize-none"></textarea>
+            </div>
+
+            <div class="space-y-2">
+                <label class="label-precision">Verification Document (PDF/JPG)</label>
+                <div class="group relative border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center hover:border-emerald-500 transition-colors">
+                    <input type="file" name="document" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <div class="text-3xl mb-2">📄</div>
+                    <p class="text-xs font-bold text-slate-500 group-hover:text-emerald-600 transition-colors">Click to upload or drag and drop</p>
+                    <p class="text-[10px] text-slate-400 mt-1 uppercase">Max File Size: 5MB</p>
+                </div>
+            </div>
+
+            <div class="pt-6">
+                <button type="submit" class="w-full bg-emerald-600 text-white font-black py-5 rounded-2xl text-xl shadow-xl shadow-emerald-200 hover:bg-emerald-700 hover:-translate-y-1 active:scale-95 transition-all">
+                    Submit Formal Application
+                </button>
+                <p class="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-6">
+                    🔒 Secure submission encrypted via AgroAssist Core
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "farmers/dashboard.html" %}
+
+{% block title %}Messages | AgroAssist{% endblock title %}
+
+{% block extra_css %}
+<style>
+    .message-thread-card {
+        background: white;
+        border: 2px solid #e2e8f0; /* High contrast border */
+        border-radius: 1.5rem;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .message-thread-card:hover {
+        border-color: #10b981;
+        background: #f8fafc;
+        transform: translateX(4px);
+    }
+    .user-avatar-mini {
+        @apply w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-sm shadow-md;
+    }
+    .status-dot {
+        @apply w-2 h-2 rounded-full bg-emerald-500;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+    
+    <div class="flex flex-col md:flex-row justify-between items-end gap-4 border-b-2 border-slate-100 pb-6">
+        <div>
+            <h2 class="text-4xl font-black text-slate-900 tracking-tighter">Comms Terminal</h2>
+            <p class="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em] mt-1">Direct inquiries from marketplace customers</p>
+        </div>
+        <div class="flex items-center gap-2 px-3 py-1 bg-slate-100 rounded-full">
+            <div class="status-dot"></div>
+            <span class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Server Active</span>
+        </div>
+    </div>
+
+    {% if rooms %}
+    <div class="space-y-4">
+        {% for room in rooms %}
+        <a href="{% url 'farmers:chat_room' room.id %}" class="message-thread-card block p-6 group">
+            <div class="flex items-center gap-6">
+                <div class="user-avatar-mini group-hover:bg-emerald-600 transition-colors">
+                    {{ room.customer.username|first|upper }}
+                </div>
+
+                <div class="flex-grow">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Inquiry Regarding:</span>
+                    </div>
+                    <h3 class="text-xl font-black text-slate-900 group-hover:text-emerald-700 transition-colors">
+                        {{ room.item.name }}
+                    </h3>
+                    <p class="text-sm font-bold text-slate-500 mt-1">
+                        Customer: <span class="text-slate-800">{{ room.customer.username }}</span>
+                    </p>
+                </div>
+
+                <div class="hidden md:flex flex-col items-end gap-2">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Secure Channel</span>
+                    <div class="bg-white border border-slate-200 px-4 py-2 rounded-xl text-xs font-black text-slate-900 group-hover:bg-slate-900 group-hover:text-white transition-all">
+                        Open Thread →
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-[2.5rem] p-20 text-center border-2 border-dashed border-slate-200">
+        <div class="text-5xl mb-4">🔇</div>
+        <h3 class="text-xl font-black text-slate-800 uppercase tracking-tighter">No Active Conversations</h3>
+        <p class="text-slate-400 font-medium max-w-xs mx-auto mt-2">When customers ask about your marketplace items, the chat threads will appear here.</p>
+    </div>
+    {% endif %}
+
+    <div class="text-center pt-10">
+        <p class="text-[9px] font-black text-slate-300 uppercase tracking-[0.4em]">End-to-End Encrypted Peer Communication</p>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,123 @@
+{% extends "officers/dashboard.html" %}
+
+{% block title %}Initialize Scheme | AgroAssist{% endblock title %}
+
+{% block extra_css %}
+<style>
+    /* EMERGENCY FIX: Ensure sidebar/nav from base template is always clickable */
+    nav, .sidebar, aside, .top-nav {
+        position: relative !important;
+        z-index: 9999 !important;
+    }
+
+    .form-input {
+        width: 100%;
+        background-color: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        font-weight: 700;
+        color: #1e293b;
+        transition: all 0.3s;
+        outline: none;
+    }
+    .form-input:focus {
+        border-color: #10b981;
+        background-color: white;
+    }
+    .form-label {
+        display: block;
+        font-size: 10px;
+        font-weight: 900;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-bottom: 0.5rem;
+        margin-left: 0.25rem;
+    }
+    .file-upload-zone {
+        border: 2px dashed #e2e8f0;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s;
+        cursor: pointer;
+        background-color: #f8fafc;
+        display: block;
+    }
+    .file-upload-zone:hover {
+        border-color: #10b981;
+    }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="relative z-0 max-w-3xl mx-auto pb-20">
+    
+    <a href="{% url 'officers:officer_dashboard' %}" class="inline-block mb-6 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">
+        ← Back to Command Center
+    </a>
+
+    <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden">
+        
+        <div class="bg-slate-900 p-8 text-white">
+            <p class="text-emerald-400 text-[10px] font-black uppercase tracking-[0.4em] mb-2">Government Portal</p>
+            <h2 class="text-3xl font-black tracking-tighter">Initialize New Scheme</h2>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="p-8 space-y-6">
+            {% csrf_token %}
+
+            <div class="space-y-2">
+                <label class="form-label">Scheme Identification (Title)</label>
+                <input type="text" name="title" required placeholder="e.g., PM-Kisan Samman Nidhi" class="form-input">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="form-label">Full Description</label>
+                    <textarea name="description" required rows="4" placeholder="Detail benefits..." class="form-input resize-none"></textarea>
+                </div>
+                <div class="space-y-2">
+                    <label class="form-label">Eligibility Criteria</label>
+                    <textarea name="eligibility" required rows="4" placeholder="Requirements..." class="form-input resize-none"></textarea>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                <div class="space-y-2">
+                    <label class="form-label">Application Deadline</label>
+                    <input type="date" name="deadline" class="form-input">
+                </div>
+                <div class="space-y-2">
+                    <label class="form-label">Official Documentation (PDF)</label>
+                    <label for="scheme_pdf" class="file-upload-zone">
+                        <span class="text-xl block mb-1">📄</span>
+                        <span id="pdfFileName" class="text-[10px] font-black text-slate-500 uppercase">Upload PDF</span>
+                        <input type="file" id="scheme_pdf" name="scheme_pdf" accept="application/pdf" class="hidden">
+                    </label>
+                </div>
+            </div>
+
+            <hr class="border-slate-100">
+
+            <div class="flex justify-end">
+                <button type="submit" class="bg-emerald-600 text-white px-10 py-4 rounded-xl font-black uppercase text-xs tracking-widest hover:bg-emerald-700 transition-all active:scale-95">
+                    🚀 Deploy Scheme
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('scheme_pdf').addEventListener('change', function() {
+        if(this.files && this.files.length > 0) {
+            const fileName = this.files[0].name;
+            const span = document.getElementById('pdfFileName');
+            span.textContent = fileName;
+            span.style.color = "#10b981";
+        }
+    });
+</script>
+{% endblock content %}

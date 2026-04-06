@@ -11,14 +11,19 @@
         </h2>
 
         <!-- Error Message -->
-        {% if error %}
-            <div class="mb-4 text-sm text-red-600 bg-red-100 border border-red-300 rounded px-4 py-2">
-                {{ error }}
-            </div>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                <div class="mb-4 text-sm text-red-600 bg-red-100 border border-red-300 rounded px-4 py-2">
+                    {{ message }}
+                </div>
+                {% endif %}
+                
+            {% endfor %}
         {% endif %}
 
         <!-- Login Form -->
-        <form method="POST" class="space-y-4">
+        <form method="POST" action="{% url "accounts:login" %}" class="space-y-4">
             {% csrf_token %}
 
             <!-- Username -->
@@ -60,17 +65,7 @@
 </div>
 
 
-{% comment %} <form method="POST">
-        {% csrf_token %}
 
-        <label>Username:</label><br>
-        <input type="text" name="username" required><br><br>
-
-        <label>Password:</label><br>
-        <input type="password" name="password" required><br><br>
-
-        <button type="submit">Login</button>
-    </form> {% endcomment %}
 
 
 {% endblock content %}

@@ -1,0 +1,107 @@
+{% extends "farmers/dashboard.html" %}
+
+
+{% block content %}
+<div class="max-w-xl mx-auto bg-white  p-6 rounded-lg shadow">
+
+  <h2 class="text-2xl font-bold mb-6 text-green-700 ">
+    🛒 List Your Produce
+  </h2>
+
+  <form method="post" enctype="multipart/form-data" class="space-y-4">
+    {% csrf_token %}
+
+    <!-- Item Name -->
+    <div>
+      <label class="block font-semibold mb-1">Item Name</label>
+      <input type="text" name="name" required
+        class="w-full border rounded px-3 py-2
+               ">
+    </div>
+
+    <!-- Category -->
+    <div>
+      <label class="block font-semibold mb-1">Category</label>
+      <select name="category" required
+        class="w-full border rounded px-3 py-2
+               ">
+        <option value="">-- Select Category --</option>
+
+        <option value="Vegetables">Vegetables</option>
+        <option value="Fruits">Fruits</option>
+        <option value="Grains">Grains</option>
+        <option value="Seeds">Seeds</option>
+        <option value="Crops">Crops</option>
+        
+      </select>
+    </div>
+
+    <!-- Price -->
+    <div>
+      <label class="block font-semibold mb-1">Price (₹)</label>
+      <input type="number" name="price" required
+        class="w-full border rounded px-3 py-2
+               ">
+    </div>
+
+    <!-- Quantity -->
+    <div>
+      <label class="block font-semibold mb-1">Quantity (Kg / Units)</label>
+      <input type="number" name="quantity" required
+        class="w-full border rounded px-3 py-2
+               ">
+    </div>
+
+     <!-- Contact Phone -->
+    <div>
+      <label class="block font-semibold mb-1">Contact Phone</label>
+      <input type="text" name="contact_phone"
+        placeholder="Eg: 9876543210"
+        class="w-full border rounded px-3 py-2 ">
+    </div>
+
+    <!-- Image -->
+    
+
+    <div>
+      <label class="block font-semibold mb-1">Product Image</label>
+      <button class="hover:bg-green-100">
+      <input type="file" name="image"
+        class="w-full  px-3 py-2 border">
+    </div> 
+
+    <!-- Description -->
+    <div>
+      <label class="block font-semibold mb-1">Description</label>
+      <textarea name="description" rows="3"
+        class="w-full border rounded px-3 py-2
+               "></textarea>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex justify-between items-center">
+      <button type="submit"
+        class="bg-green-700 text-white px-6 py-2 rounded hover:bg-green-800">
+        Add Item
+      </button>
+
+      <div>
+    
+      <button type="reset"
+        class=" text-gray-600 px-6 py-2 rounded
+              hover:underline ">
+        Clear
+      </button>
+
+      <a href="{% url 'marketplace:view_items' %}"
+        class="text-gray-600 0 hover:underline">
+        Cancel
+      </a>
+      </div>
+    </div>
+
+  </form>
+</div>
+{% endblock content %}
+
+

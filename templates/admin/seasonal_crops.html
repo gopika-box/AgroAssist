@@ -1,0 +1,106 @@
+{% extends "admin/dashboard.html" %}
+
+{% block content %}
+
+<h2 class="text-2xl font-bold text-green-700 mb-6">
+  🌾 Seasonal Crops
+</h2>
+
+<!-- Season Filter -->
+<form method="get" class="mb-6 flex flex-wrap gap-4 items-center">
+  <label class="font-semibold">Select Season:</label>
+
+  <select name="season"
+          class="border rounded px-4 py-2">
+    <option value="">-- Select Season --</option>
+
+    <option value="Summer"
+      {% if selected_season == "Summer" %}selected{% endif %}>
+      Summer
+    </option>
+
+    <option value="Monsoon"
+      {% if selected_season == "Monsoon" %}selected{% endif %}>
+      Monsoon
+    </option>
+
+    <option value="Winter"
+      {% if selected_season == "Winter" %}selected{% endif %}>
+      Winter
+    </option>
+
+    <option value="Spring"
+      {% if selected_season == "Spring" %}selected{% endif %}>
+      Spring
+    </option>
+  </select>
+
+  <button type="submit"
+          class="bg-green-700 text-white px-5 py-2 rounded ">
+    View Crops
+  </button>
+</form>
+
+<!-- Crop List -->
+{% if crops %}
+<div class="space-y-6">
+
+  {% for crop in crops %}
+  <div class="bg-white  p-6 rounded-lg shadow">
+
+    <h3 class="text-xl font-semibold text-green-700  mb-2">
+      {{ crop.name }}
+    </h3>
+
+    <p class="text-sm mb-1">
+      <b>Season:</b> {{ crop.season }}
+    </p>
+
+    <p class="text-sm mb-1">
+      <b>Soil Type:</b> {{ crop.soil_type }}
+    </p>
+
+    <p class="text-sm mb-1">
+      <b>Crop Duration:</b> {{ crop.duration }}
+    </p>
+
+    <p class="mt-3 text-gray-700 ">
+      {{ crop.description }}
+    </p>
+
+    <!-- Fertilizer Schedule -->
+    <div class="mt-4 p-4 bg-gray-100  rounded">
+      <h4 class="font-semibold mb-2">
+        🌱 Recommended Fertilizer Schedule
+      </h4>
+
+      {% for fs in crop.cropfertilizerschedule_set.all %}
+        <div class="text-sm mb-3">
+          <b>Stage:</b> {{ fs.stage }} <br>
+          <b>Fertilizer:</b> {{ fs.fertilizer.name }}
+          ({{ fs.fertilizer.brand }}) <br>
+          <b>Quantity:</b> {{ fs.quantity }} <br>
+          <i class="text-gray-600 dark:text-gray-300">
+            {{ fs.notes }}
+          </i>
+        </div>
+      {% empty %}
+        <p class="text-sm text-gray-500">
+          No fertilizer schedule available for this crop.
+        </p>
+      {% endfor %}
+    </div>
+
+  </div>
+  {% endfor %}
+
+</div>
+{% else %}
+<div class="bg-white p-6 rounded shadow">
+  <p class="text-gray-500">
+    No crops found for the selected season.
+  </p>
+</div>
+{% endif %}
+
+{% endblock content %}

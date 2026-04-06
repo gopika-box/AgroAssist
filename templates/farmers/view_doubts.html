@@ -1,0 +1,76 @@
+{% extends "farmers/dashboard.html" %}
+
+{% block title %}My Doubts{% endblock %}
+
+{% block content %}
+
+<h2 class="text-2xl font-bold text-gray-800 mb-6">
+  ❓ My Agricultural Doubts
+</h2>
+
+{% if doubts %}
+  <div class="space-y-6">
+
+    {% for doubt in doubts %}
+      <div class="bg-white rounded-xl shadow p-6 border-l-4
+                  {% if doubt.is_resolved %}border-green-600{% else %}border-yellow-500{% endif %}">
+
+        <!-- Question -->
+        <div class="mb-3">
+          <p class="text-sm text-gray-500">
+            Asked on {{ doubt.created_at|date:"d M Y, h:i A" }}
+          </p>
+          <p class="text-gray-800 font-semibold mt-1">
+            {{ doubt.question }}
+          </p>
+        </div>
+
+        <!-- Status -->
+        <div class="mb-4">
+          {% if doubt.is_resolved %}
+            <span class="inline-block bg-green-100 text-green-700 text-sm px-3 py-1 rounded-full">
+              ✅ Resolved
+            </span>
+          {% else %}
+            <span class="inline-block bg-yellow-100 text-yellow-700 text-sm px-3 py-1 rounded-full">
+              ⏳ Pending
+            </span>
+          {% endif %}
+        </div>
+
+        <!-- Officer Reply -->
+        {% if doubt.reply %}
+          <div class="bg-gray-50 border rounded-lg p-4">
+            <p class="text-sm text-gray-500 mb-1">
+              👨‍🌾 Officer Reply
+            </p>
+            <p class="text-gray-700">
+              {{ doubt.reply }}
+            </p>
+
+            <p class="text-xs text-gray-400 mt-2">
+              Replied on {{ doubt.replied_at|date:"d M Y, h:i A" }}
+            </p>
+          </div>
+        {% else %}
+          <p class="text-sm text-gray-500 italic">
+            Waiting for officer response…
+          </p>
+        {% endif %}
+
+      </div>
+    {% endfor %}
+
+  </div>
+
+{% else %}
+  <div class="bg-white rounded-lg shadow p-6 text-center text-gray-600">
+    <p>You haven’t asked any doubts yet.</p>
+    <a href="{% url 'farmers:ask_doubt' %}"
+       class="inline-block mt-4 bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700">
+      Ask a Doubt
+    </a>
+  </div>
+{% endif %}
+
+{% endblock content %}

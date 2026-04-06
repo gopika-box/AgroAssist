@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Customer Dashboard | AgroAssist{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* LEAN CONTENT STYLING */
+    .bento-card {
+        background: white;
+        border: 1px solid #f1f5f9;
+        border-radius: 1.25rem; /* Slimmer radius */
+        padding: 1.5rem; /* Tighter padding */
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .bento-card:hover {
+        border-color: #10b981;
+        box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Keep Sidebar Responsive Toggle */
+    @media (max-width: 768px) {
+        #sidebar {
+            position: fixed;
+            z-index: 50;
+            left: 0;
+            top: 0;
+            height: 100vh;
+        }
+    }
+</style>
+{% endblock extra_css %}
+
+{% block titleside %}
+<button class="md:hidden text-white text-2xl" onclick="toggleSidebar()">
+    ☰
+</button>
+{% endblock titleside %}
+
+{% block nav %}
+<div class="flex items-center gap-6">
+    {% comment %} <button class="relative p-2 hover:bg-white/10 rounded-full transition-colors">
+        <span class="text-xl">🔔</span>
+        <span class="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full border-2 border-green-800"></span>
+    </button> {% endcomment %}
+
+    <div class="relative">
+        <button onclick="toggleAccount()"
+            class="w-10 h-10 bg-white rounded-full text-green-700 font-bold flex items-center justify-center shadow-sm hover:scale-105 transition-transform">
+            {{ request.user.username|first|upper }}
+        </button>
+
+        <div id="accountDropdown"
+             class="hidden absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-xl border border-slate-100 text-gray-700 z-50 overflow-hidden">
+            <div class="px-4 py-3 border-b bg-slate-50">
+                <p class="text-xs font-black text-slate-900 uppercase tracking-tighter">{{ request.user.username }}</p>
+                <p class="text-[10px] text-gray-500 font-bold uppercase mt-0.5">Verified Customer</p>
+            </div>
+            <div class="p-2">
+                <a href="{% url 'accounts:logout' %}"
+                   class="block text-center bg-red-600 text-white py-2 text-xs font-bold rounded-lg hover:bg-red-700 transition-colors">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock nav %}
+
+{% block sidebar %}
+<aside id="sidebar" class="w-64 bg-green-800 text-white hidden md:block min-h-screen p-6 space-y-4 dark:bg-gray-800">
+    <a href="{% url 'accounts:customer_dashboard' %}"
+       class="block bg-green-700 p-2 rounded font-bold">
+       🏠 Dashboard
+    </a>
+
+    <a href="{% url 'marketplace:view_items' %}"
+       class="block hover:bg-green-700 p-2 rounded">
+       🛒 Marketplace
+    </a>
+
+    <a href="{% url 'farmers:customer_chats' %}"
+       class="block hover:bg-green-700 p-2 rounded">
+       📞 My Chats
+    </a>
+</aside>
+{% endblock sidebar %}
+
+{% block content %}
+<div class="p-4 md:p-8 max-w-6xl mx-auto space-y-6 md:space-y-10">
+
+    <div class="relative overflow-hidden bg-slate-900 rounded-2xl md:rounded-3xl p-8 md:p-12 text-white shadow-xl">
+        <div class="relative z-10 max-w-2xl">
+            <span class="inline-block bg-emerald-500/20 text-emerald-400 text-[9px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-md border border-emerald-500/30 mb-4">
+                Fresh Produce Hub
+            </span>
+            <h1 class="text-3xl md:text-5xl font-black tracking-tighter mb-4 leading-none">
+                Welcome back, <br class="sm:hidden"> {{ request.user.username }} 👋
+            </h1>
+            <p class="text-slate-400 text-sm md:text-base font-medium max-w-md">
+                Browse fresh produce directly from verified farmers in your region.
+            </p>
+        </div>
+        <div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <div class="bento-card group">
+            <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">🛒</div>
+            <h3 class="text-base font-black text-slate-900 uppercase tracking-tight mb-2">Marketplace</h3>
+            <p class="text-xs text-slate-500 mb-6 leading-relaxed">
+                View available crops and products directly from the field.
+            </p>
+            <a href="{% url 'marketplace:view_items' %}" class="mt-auto inline-flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-widest hover:gap-3 transition-all">
+                Browse Items →
+            </a>
+        </div>
+
+        <div class="bento-card group">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">👨‍🌾</div>
+            <h3 class="text-base font-black text-slate-900 uppercase tracking-tight mb-2">Farmers</h3>
+            <p class="text-xs text-slate-500 mb-6 leading-relaxed">
+                Get contact details of verified farmers and build direct connections.
+            </p>
+            <span class="mt-auto text-[10px] font-black text-blue-600 uppercase tracking-widest">Direct Access Enabled</span>
+        </div>
+
+        <div class="bento-card bg-emerald-600 border-none group">
+            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl mb-6">📞</div>
+            <h3 class="text-base font-black text-black uppercase tracking-tight mb-2">My Chats</h3>
+            <p class="text-emerald-700 text-xs mb-6 leading-relaxed">
+                Stay updated with new listings and message farmers directly.
+            </p>
+            <a href="{% url 'farmers:customer_chats' %}" class="mt-auto inline-block bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest px-6 py-3 rounded-xl hover:bg-black transition-all text-center">
+                Open Messenger
+            </a>
+        </div>
+
+    </div>
+
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    function toggleSidebar(){
+        document.getElementById("sidebar").classList.toggle("hidden")
+    }
+    
+    function toggleAccount() {
+        document.getElementById("accountDropdown").classList.toggle("hidden")
+    }
+
+    // Auto-close sidebar on resize if window is large
+    window.addEventListener('resize', function() {
+        if (window.innerWidth >= 768) {
+            document.getElementById("sidebar").classList.add("hidden");
+            // Note: In your original, md:block handled the desktop visibility.
+        }
+    });
+</script>
+{% endblock extra_js %}

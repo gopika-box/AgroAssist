@@ -1,0 +1,75 @@
+{% extends "farmers/dashboard.html" %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+    <h2 class="text-3xl font-bold text-green-700 mb-6">
+        My Applications
+    </h2>
+
+    <div class="bg-white shadow-lg rounded-2xl overflow-hidden">
+
+        <table class="w-full text-sm">
+
+            <thead class="bg-green-600 text-white">
+                <tr>
+                    <th class="p-3 text-left">Scheme</th>
+                    <th class="p-3 text-left">Panchayat</th>
+                    <th class="p-3 text-left">Land Area</th>
+                    <th class="p-3 text-left">Applied On</th>
+                    <th class="p-3 text-left">Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for app in applications %}
+                <tr class="border-b hover:bg-green-50">
+
+                    <td class="p-3 font-medium">
+                        {{ app.scheme.title }}
+                    </td>
+
+                    <td class="p-3">
+                        {{ app.panchayat }}
+                    </td>
+
+                    <td class="p-3">
+                        {{ app.land_area }}
+                    </td>
+
+                    <td class="p-3 text-gray-500">
+                        {{ app.created_at|date:"M d, Y" }}
+                    </td>
+
+                    <td class="p-3">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold
+                            {% if app.status == 'Approved' %}
+                                bg-green-100 text-green-700
+                            {% elif app.status == 'Rejected' %}
+                                bg-red-100 text-red-700
+                            {% else %}
+                                bg-yellow-100 text-yellow-700
+                            {% endif %}
+                        ">
+                            {{ app.status }}
+                        </span>
+                    </td>
+
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="p-6 text-center text-gray-500">
+                        No applications yet 😕
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}
